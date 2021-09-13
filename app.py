@@ -7,13 +7,16 @@ app = Flask(__name__)
 #     - /login
 #     - /cursos
 
+# uncisal.edu.br
 @app.route("/")
 def hello_world():
     return "<p>Hello World!!</p>"
 
+# uncisal.edu.br/saudacao/tonho
 @app.route("/saudacao/<nome>")
 def saudacao(nome):
     return f"<p>Seja Bem Vindo {nome}</p>"
+
 
 @app.route("/soma/<int:a>/<int:b>", methods=["GET", "POST"])
 def soma(a, b):

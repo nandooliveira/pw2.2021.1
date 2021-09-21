@@ -18,7 +18,7 @@ def saudacao(nome):
     return f"<p>Seja Bem Vindo {nome}</p>"
 
 
-@app.route("/soma/<int:a>/<int:b>", methods=["GET", "POST"])
+@app.route("/soma/<int:a>/<int:b>", methods=['GET', 'POST'])
 def soma(a, b):
     if request.method == "GET":
         return f"GET a + b = {a + b}"
@@ -36,7 +36,7 @@ def perfil():
     # Passar esses dados para o template de Perfil
     return render_template(
         "perfil.html",
-        nome = "Fernando",
+        nome = "Tonho",
         email = "fernando.oliveira@hey.com",
         numero = 1,
         alunos = ["Pablo", "Adonis", "Claudio", "Tayane", "Rebbecca"]
@@ -44,3 +44,4 @@ def perfil():
 
 # METHODS - GET POST
 # www.exemplo.com?usuario=fernando&senha=123mudar
+# PostgreSQL - SGBD

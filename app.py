@@ -1,4 +1,5 @@
 from flask import Flask, request, render_template
+import psycopg2
 
 app = Flask(__name__)
 
@@ -25,20 +26,25 @@ def soma(a, b):
     else:
         return f"POST a + b = {a + b}"
 
-@app.route("/perfil")
-def perfil():
-    # Verificar qual o usuário está autenticado
-    # Buscar os dados do usuário no banco de dados
-    usuario = {
-        "nome": "Zé de Nanan",
-        "email": "tonho@da.lua"
-    }
+@app.route("/perfil/<int:id>")
+def perfil(id):
+    connection = psycopg2.connect(
+        host = 'localhost',
+        database = 'pweb',
+        user = 'postgres',
+        password = 'postgres'
+    )
+
+    cursor = connection.cursor()
+    cursor.execute(f"SELECT * FROM usuarios WHERE id = {id}")
+    usuario = cursor.fetchall()[0]
+
     # Passar esses dados para o template de Perfil
     return render_template(
         "perfil.html",
-        nome = "Tonho",
-        email = "fernando.oliveira@hey.com",
-        numero = 1,
+        nome = usuario[1],
+        email = usuario[2],
+        numero = usuario[0],
         alunos = ["Pablo", "Adonis", "Claudio", "Tayane", "Rebbecca"]
     )
 

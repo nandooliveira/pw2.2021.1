@@ -1,7 +1,9 @@
-from flask import Flask, request, render_template
-import psycopg2
+from flask import Flask, request, redirect, render_template
+
+from models.usuario import Usuario
 
 app = Flask(__name__)
+
 
 # www.uncisal.edu.br
 #     - /users
@@ -12,6 +14,7 @@ app = Flask(__name__)
 @app.route("/")
 def hello_world():
     return "<p>Hello World!!</p>"
+
 
 # uncisal.edu.br/saudacao/tonho
 @app.route("/saudacao/<nome>")
@@ -26,27 +29,40 @@ def soma(a, b):
     else:
         return f"POST a + b = {a + b}"
 
+
 @app.route("/perfil/<int:id>")
 def perfil(id):
-    connection = psycopg2.connect(
-        host = 'localhost',
-        database = 'pweb',
-        user = 'postgres',
-        password = 'postgres'
-    )
-
-    cursor = connection.cursor()
-    cursor.execute(f"SELECT * FROM usuarios WHERE id = {id}")
-    usuario = cursor.fetchall()[0]
+    usuario = Usuario.find_by_id(id)
 
     # Passar esses dados para o template de Perfil
     return render_template(
         "perfil.html",
-        nome = usuario[1],
-        email = usuario[2],
-        numero = usuario[0],
-        alunos = ["Pablo", "Adonis", "Claudio", "Tayane", "Rebbecca"]
+        nome=usuario.nome,
+        email=usuario.email,
+        numero=usuario.id,
+        alunos=["Pablo", "Adonis", "Claudio", "Tayane", "Rebbecca"]
     )
+
+
+@app.route("/usuarios", methods=['POST'])
+def criar_usuario():
+    nome = request.form["nome"]
+    email = request.form["email"]
+    telefone = request.form["telefone"]
+    senha = request.form["senha"]
+
+    Usuario.create(nome, email, senha, telefone)
+
+    return redirect("/perfil/1")
+
+
+# [C]rud    -> POST /recursos
+# [R]ead    -> GET  /recursos
+# [U]pdate  -> POST /recursos/{id}
+# [D]delete -> DELETE /recursos/{id}
+
+# def change_password(id, senha):
+#     usuario = find_user_by_id(id)
 
 # METHODS - GET POST
 # www.exemplo.com?usuario=fernando&senha=123mudar

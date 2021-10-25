@@ -1,9 +1,17 @@
 from flask import Flask, request, redirect, render_template
 
-from models.usuario import Usuario
+# from models.usuario import Usuario
+
+from flask_migrate import Migrate
+from models import db, Usuario
 
 app = Flask(__name__)
 
+app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/pweb"
+app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
+
+db.init_app(app)
+migrate = Migrate(app, db)
 
 # www.uncisal.edu.br
 #     - /users
@@ -32,7 +40,7 @@ def soma(a, b):
 
 @app.route("/perfil/<int:id>")
 def perfil(id):
-    usuario = Usuario.find_by_id(id)
+    usuario = Usuario.query.filter(Usuario.id == id).first()
 
     # Passar esses dados para o template de Perfil
     return render_template(

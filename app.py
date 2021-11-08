@@ -7,6 +7,7 @@ from models import db, Usuario
 
 app = Flask(__name__)
 
+# app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://user:password@host:port/database_name"
 app.config['SQLALCHEMY_DATABASE_URI'] = "postgresql://postgres:postgres@localhost:5432/pweb"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = True
 
